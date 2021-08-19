@@ -40,6 +40,7 @@ namespace ForkandBeard.DirectorySync
 
             Console.WriteLine($"Indexing @ {directory}...");
             index.Files = new List<string>(System.IO.Directory.GetFiles(directory, "*", System.IO.SearchOption.TopDirectoryOnly));
+            index.Files = index.Files.ForEach(path => path.ToLower().Replace(directory.ToLower(), "")).ToList();
             index.IndexCreated = DateTime.Now;
 
             Console.WriteLine($"Saving index @ {directory}.");
