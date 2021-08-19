@@ -7,11 +7,14 @@ namespace ForkandBeard.DirectorySync
 {
     public class Index
     {
-        public DateTime IndexCreated { get; set; }
+        public DateTime IndexUpdated { get; set; }
         public List<string> Files { get; set; }
+        public IdAndVersion Instance { get; set; }
+        public List<IdAndVersion> Synced { get; set; }
 
         public Index()
         {
+            this.Instance = new IdAndVersion();
         }
 
         public void Save(string directory)
@@ -46,6 +49,18 @@ namespace ForkandBeard.DirectorySync
         public static string GetIndexPath(string directory)
         {
             return System.IO.Path.Combine(directory, @"fab.ds.index.json");
+        }
+
+        public class IdAndVersion
+        {
+            public Guid Id { get; set; }
+            public Guid Version { get; set; }
+
+            public IdAndVersion()
+            {
+                this.Id = Guid.NewGuid();
+                this.Version = Guid.NewGuid();
+            }
         }
     }
 }

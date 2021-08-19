@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ForkandBeard.DirectorySync
@@ -29,19 +30,23 @@ namespace ForkandBeard.DirectorySync
             if(
                 (index != null)
                 && (!force)
-                && (!IndexingRequired(index.IndexCreated, directory))
+                && (!IndexingRequired(index.IndexUpdated, directory))
                 )
             {
                 Console.WriteLine($"No indexing required @ {directory}.");
                 return;
             }
 
-            index = new Index();
+            if (index == null)
+            {
+                index = new Index();
+            }
 
             Console.WriteLine($"Indexing @ {directory}...");
             index.Files = new List<string>(System.IO.Directory.GetFiles(directory, "*", System.IO.SearchOption.TopDirectoryOnly));
-            index.Files = index.Files.ForEach(path => path.ToLower().Replace(directory.ToLower(), "")).ToList();
-            index.IndexCreated = DateTime.Now;
+            index.Files = index.Files.Select(path => path.ToLower().Replace(directory.ToLower(), "")).ToList();
+            index.IndexUpdated = DateTime.Now;
+            index.Instance.Version = Guid.NewGuid();
 
             Console.WriteLine($"Saving index @ {directory}.");
             index.Save(directory);
