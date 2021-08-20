@@ -8,11 +8,12 @@ namespace ForkandBeard.DirectorySync
     {
         public static void Log(string root, string message)
         {
+            var logPath = GetLogPath(root);
+
             message = $"== {DateTime.Now} == {message}";
 
             Console.WriteLine(message);
-            System.IO.File.AppendAllText(GetLogPath(root), message);
-            System.IO.File.AppendAllText(GetLogPath(root), Environment.NewLine);
+            System.IO.File.AppendAllText(logPath, message + Environment.NewLine);
         }
 
         private static string GetLogPath(string root)
