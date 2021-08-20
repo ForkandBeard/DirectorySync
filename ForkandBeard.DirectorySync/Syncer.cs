@@ -39,6 +39,12 @@ namespace ForkandBeard.DirectorySync
             }
 
             Logger.Log(root2, $"Synced all directories root {root2} <==> {root1}");
+
+            // Sync root.
+            Logger.Log(root1, $"Syncing roots...");
+            SyncDirectory(root1, root2, String.Empty);
+            SyncDirectory(root2, root1, String.Empty);
+            Logger.Log(root1, $"Synced roots.");
         }
 
         public static void SyncDirectory(string root1, string root2, string directory)

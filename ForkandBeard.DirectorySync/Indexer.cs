@@ -23,6 +23,9 @@ namespace ForkandBeard.DirectorySync
             }
 
             Logger.Log(root, $"Indexed all directories @ root {root}.");
+            Logger.Log(root, $"Indexing root @ {root}...");
+            IndexDirectory(root, root, false);
+            Logger.Log(root, $"Indexed root @ {root}.");
         }
 
         public static Guid IndexDirectory(string root, string directory, bool force)
@@ -94,6 +97,11 @@ namespace ForkandBeard.DirectorySync
 
         public static string GetFullDirectoryPath(string root, string directory)
         {
+            if(String.IsNullOrWhiteSpace(directory))
+            {
+                return root;
+            }
+
             if (directory.StartsWith(@"\"))
             {
                 return System.IO.Path.Combine(root, directory.Substring(1));
