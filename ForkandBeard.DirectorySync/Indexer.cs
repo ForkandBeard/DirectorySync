@@ -10,22 +10,25 @@ namespace ForkandBeard.DirectorySync
         public static void IndexAllDirectories(string root)
         {
             List<string> allDirectories;
-            int counter = 1;
+            int counter = 0;
 
-            Console.WriteLine($"Indexing all directories @ root {root}.");
+            Logger.Log(root, $"Indexing all directories @ root {root}...");
             allDirectories = new List<string>( System.IO.Directory.GetDirectories(root, "*", System.IO.SearchOption.AllDirectories));
 
             foreach(string directory in allDirectories)
             {
-                Console.WriteLine($"Indexing directory {counter} of {allDirectories.Count}.");
-                IndexDirectory(directory, false);
+                counter++;
+                Logger.Log(root, $"Indexing directory {counter} of {allDirectories.Count}.");
+                IndexDirectory(root, directory, false);
             }
+
+            Logger.Log(root, $"Indexed all directories @ root {root}.");
         }
 
 
-        public static void IndexDirectory(string directory, bool force)
+        public static Guid IndexDirectory(string root, string directory, bool force)
         { 
-            Index index = Index.Load(directory);
+            Index index = Index.Load(root, directory);
 
             if(
                 (index != null)
@@ -33,8 +36,8 @@ namespace ForkandBeard.DirectorySync
                 && (!IndexingRequired(index.IndexUpdated, directory))
                 )
             {
-                Console.WriteLine($"No indexing required @ {directory}.");
-                return;
+                Logger.Log(root, $"No indexing required @ {directory}.");
+                return index.Instance.Version;
             }
 
             if (index == null)
@@ -42,16 +45,18 @@ namespace ForkandBeard.DirectorySync
                 index = new Index();
             }
 
-            Console.WriteLine($"Indexing @ {directory}...");
+            Logger.Log(root, $"Indexing @ {directory}...");
             index.Files = new List<string>(System.IO.Directory.GetFiles(directory, "*", System.IO.SearchOption.TopDirectoryOnly));
             index.Files = index.Files.Select(path => path.ToLower().Replace(directory.ToLower(), "")).ToList();
             index.IndexUpdated = DateTime.Now;
             index.Instance.Version = Guid.NewGuid();
 
-            Console.WriteLine($"Saving index @ {directory}.");
+            Logger.Log(root, $"Saving index @ {directory}.");
             index.Save(directory);
 
-            Console.WriteLine($"Indexed @ {directory}.");
+            Logger.Log(root, $"Indexed @ {directory}.");
+
+            return index.Instance.Version;
         }
 
         public static bool IndexingRequired(DateTime lastIndex, string directory)

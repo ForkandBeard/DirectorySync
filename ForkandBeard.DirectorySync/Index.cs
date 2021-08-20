@@ -15,6 +15,7 @@ namespace ForkandBeard.DirectorySync
         public Index()
         {
             this.Instance = new IdAndVersion();
+            this.Synced = new List<IdAndVersion>();
         }
 
         public void Save(string directory)
@@ -29,20 +30,20 @@ namespace ForkandBeard.DirectorySync
             System.IO.File.WriteAllText(path, JsonSerializer.Serialize(this));
         }
 
-        public static Index Load(string directory)
+        public static Index Load(string root, string directory)
         {
             var path = GetIndexPath(directory);
 
             if (!System.IO.File.Exists(path))
             {
-                Console.WriteLine($"No index found @ {directory}.");
+                Logger.Log(root, $"No index found @ {directory}.");
                 return null;
             }
 
-            Console.WriteLine($"Loading index found @ {directory}.");
+            Logger.Log(root, $"Loading index found @ {directory}.");
             var index = JsonSerializer.Deserialize<Index>(System.IO.File.ReadAllText(path));
 
-            Console.WriteLine($"Loaded index @ {directory}.");
+            Logger.Log(root, $"Loaded index @ {directory}.");
             return index;
         }
 

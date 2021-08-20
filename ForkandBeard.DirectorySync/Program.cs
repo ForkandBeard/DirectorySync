@@ -18,6 +18,14 @@ namespace ForkandBeard.DirectorySync
                     Indexer.IndexAllDirectories(root2);
                     break;
             }
+
+            switch (Console.ReadKey().Key)
+            {
+                case ConsoleKey.B:
+                case ConsoleKey.S:
+                    Syncer.SyncAllDirectories(root1, root2);
+                    break;
+            }
         }
     }
 }
