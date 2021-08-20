@@ -19,5 +19,11 @@ namespace ForkandBeard.DirectorySync
         {
             return System.IO.Path.Combine(root, "fab.ds.log.txt");
         }
+
+        public static void DeleteLogs(string root1, string root2)
+        {
+            System.IO.File.Delete(GetLogPath(root1));
+            System.IO.File.Delete(GetLogPath(root2));
+        }
     }
 }
