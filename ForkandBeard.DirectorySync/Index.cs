@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -45,6 +46,25 @@ namespace ForkandBeard.DirectorySync
 
             Logger.Log(root, $"Loaded index @ {directory}.");
             return index;
+        }
+
+        public static void UpdateVersion(string root, string directory, IdAndVersion newVersion)
+        {
+            Index index = Load(root, directory);
+            IdAndVersion currentVersion;
+
+            currentVersion = index.Synced.Where(idAndVerion => idAndVerion.Id == newVersion.Id).FirstOrDefault();
+
+            if(currentVersion == null)
+            {
+                index.Synced.Add(newVersion);
+            }
+            else
+            {
+                currentVersion.Version = newVersion.Version;
+            }
+
+            index.Save(directory);
         }
 
         public static string GetIndexPath(string directory)

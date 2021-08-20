@@ -25,7 +25,6 @@ namespace ForkandBeard.DirectorySync
             Logger.Log(root, $"Indexed all directories @ root {root}.");
         }
 
-
         public static Guid IndexDirectory(string root, string directory, bool force)
         { 
             Index index = Index.Load(root, directory);
@@ -47,7 +46,7 @@ namespace ForkandBeard.DirectorySync
 
             Logger.Log(root, $"Indexing @ {directory}...");
             index.Files = new List<string>(System.IO.Directory.GetFiles(directory, "*", System.IO.SearchOption.TopDirectoryOnly));
-            index.Files = index.Files.Select(path => path.ToLower().Replace(directory.ToLower(), "")).ToList();
+            index.Files = index.Files.Select(path => RemoveDirectoryFromPath(directory, path)).ToList();
             index.IndexUpdated = DateTime.Now;
             index.Instance.Version = Guid.NewGuid();
 
@@ -76,6 +75,47 @@ namespace ForkandBeard.DirectorySync
             }
 
             return false;
+        }
+
+        public static string RemoveRootFromPath(string root, string path)
+        {
+            return path.Replace(root, String.Empty, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string RemoveDirectoryFromPath(string directory, string path)
+        {
+            return path.Replace(directory, String.Empty, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string RemoveRootFromDirectory(string root, string directory)
+        {
+            return directory.Replace(root, String.Empty, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string GetFullDirectoryPath(string root, string directory)
+        {
+            if (directory.StartsWith(@"\"))
+            {
+                return System.IO.Path.Combine(root, directory.Substring(1));
+            }
+            else
+            {
+                return System.IO.Path.Combine(root, directory);
+            }
+        }
+
+        public static string GetFullFilePath(string root, string directory, string file)
+        {
+            string directoryPath = GetFullDirectoryPath(root, directory);
+
+            if (file.StartsWith(@"\"))
+            {
+                return System.IO.Path.Combine(directoryPath, file.Substring(1));
+            }
+            else
+            {
+                return System.IO.Path.Combine(directoryPath, file);
+            }
         }
     }
 }
