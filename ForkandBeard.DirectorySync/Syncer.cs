@@ -71,12 +71,14 @@ namespace ForkandBeard.DirectorySync
             {
                 Logger.Log(root1, $"No index found @ {directory1}. Creating new index.");
                 Indexer.IndexDirectory(root1, directory1, true);
+                index1 = Index.Load(root1, directory1);
             }
 
             if (index2 == null)
             {
                 Logger.Log(root2, $"No index found @ {directory2}. Creating new index.");
                 Indexer.IndexDirectory(root2, directory2, true);
+                index2 = Index.Load(root2, directory2);
             }
 
             SyncDirectory(root1, root2, directory, index1, index2);

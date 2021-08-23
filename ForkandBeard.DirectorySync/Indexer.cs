@@ -7,7 +7,7 @@ namespace ForkandBeard.DirectorySync
 {
     public class Indexer
     {
-        public static void IndexAllDirectories(string root)
+        public static void IndexAllDirectories(string root, bool force)
         {
             List<string> allDirectories;
             int counter = 0;
@@ -19,12 +19,12 @@ namespace ForkandBeard.DirectorySync
             {
                 counter++;
                 Logger.Log(root, $"Indexing directory {counter} of {allDirectories.Count}.");
-                IndexDirectory(root, directory, false);
+                IndexDirectory(root, directory, force);
             }
 
             Logger.Log(root, $"Indexed all directories @ root {root}.");
             Logger.Log(root, $"Indexing root @ {root}...");
-            IndexDirectory(root, root, false);
+            IndexDirectory(root, root, force);
             Logger.Log(root, $"Indexed root @ {root}.");
         }
 

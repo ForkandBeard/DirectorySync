@@ -13,7 +13,11 @@ namespace ForkandBeard.DirectorySync
             message = $"== {DateTime.Now} == {message}";
 
             Console.WriteLine(message);
-            System.IO.File.AppendAllText(logPath, message + Environment.NewLine);
+            try
+            {
+                System.IO.File.AppendAllText(logPath, message + Environment.NewLine);
+            }
+            catch (Exception ignore) { }
         }
 
         private static string GetLogPath(string root)
