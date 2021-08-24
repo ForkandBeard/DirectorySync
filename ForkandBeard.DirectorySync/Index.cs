@@ -31,6 +31,16 @@ namespace ForkandBeard.DirectorySync
             System.IO.File.WriteAllText(path, JsonSerializer.Serialize(this));
         }
 
+        public void Delete(string directory)
+        {
+            var path = GetIndexPath(directory);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+        }
+
         public static Index Load(string root, string directory)
         {
             var path = GetIndexPath(directory);
@@ -69,7 +79,7 @@ namespace ForkandBeard.DirectorySync
 
         public static string GetIndexPath(string directory)
         {
-            return System.IO.Path.Combine(directory, @"fab.ds.index.json");
+            return System.IO.Path.Combine(directory, @"_fab.ds.index.json");
         }
 
         public class IdAndVersion

@@ -22,7 +22,7 @@ namespace ForkandBeard.DirectorySync
 
         private static string GetLogPath(string root)
         {
-            return System.IO.Path.Combine(root, "fab.ds.log.txt");
+            return System.IO.Path.Combine(root, "_fab.ds.log.txt");
         }
 
         public static void DeleteLogs(string root1, string root2)

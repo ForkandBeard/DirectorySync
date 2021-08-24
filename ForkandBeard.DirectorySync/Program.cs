@@ -9,7 +9,7 @@ namespace ForkandBeard.DirectorySync
             var root1 = args[0];
             var root2 = args[1];
 
-            Console.WriteLine("[i]ndex only, [s]ync only or [b]oth? ([f]orce re-index only)");
+            Console.WriteLine("[i]ndex only, [s]ync only or [b]oth? ([f]orce re-index only, [d]elete all indexes only)");
             switch(Console.ReadKey().Key)
             {
                 case ConsoleKey.B:
@@ -31,6 +31,15 @@ namespace ForkandBeard.DirectorySync
                         return;
                     }
                     Indexer.IndexAllDirectories(root2, false);
+                    break;
+                case ConsoleKey.D:
+                    Logger.DeleteLogs(root1, root2);
+                    Indexer.DeleteAllIndexes(root1);
+                    if (root1 == root2)
+                    {
+                        return;
+                    }
+                    Indexer.DeleteAllIndexes(root2);
                     break;
                 case ConsoleKey.F:
                     Logger.DeleteLogs(root1, root2);

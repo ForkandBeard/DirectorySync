@@ -80,6 +80,30 @@ namespace ForkandBeard.DirectorySync
             return false;
         }
 
+        public static void DeleteAllIndexes(string root)
+        {
+            List<string> allDirectories;
+            int counter = 0;
+            Index index;
+
+            Logger.Log(root, $"Deleting all indexes @ root {root}...");
+            allDirectories = new List<string>(System.IO.Directory.GetDirectories(root, "*", System.IO.SearchOption.AllDirectories));
+
+            foreach (string directory in allDirectories)
+            {
+                counter++;
+                Logger.Log(root, $"Deleting index {counter} of {allDirectories.Count}.");
+                index = Index.Load(root, directory);
+                index?.Delete(directory);
+            }
+
+            Logger.Log(root, $"Deleted all directories @ root {root}.");
+            Logger.Log(root, $"Deleting root @ {root}...");
+            index = Index.Load(root, root);
+            index?.Delete(root);
+            Logger.Log(root, $"Deleted index root @ {root}.");
+        }
+
         public static string RemoveRootFromPath(string root, string path)
         {
             return path.Replace(root, String.Empty, StringComparison.OrdinalIgnoreCase);
